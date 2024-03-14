@@ -23,25 +23,25 @@ switch ($method) {
         // Create operation (add a new land)
         $data = json_decode(file_get_contents('php://input'), true);
 
-      
+
         $land_id = $_POST['land_id'];
         $description = $_POST['description'];
         $type = $_POST['type'];
         $size = $_POST['size'];
         $land_loard =   isset($_POST['land_loard']) ? $_POST['land_loard'] : 'lands';
-           
 
-         $owner_id = isset($_POST['owner_id']) ? $_POST['owner_id'] : '';
-        $price = isset($_POST['land_loard']) ? "60000" : "0";
+
+        $owner_id = isset($_POST['owner_id']) ? $_POST['owner_id'] : '';
+        $price = isset($_POST['land_loard']) ? "5000" : "0";
         $duration = "Not Registered";
         $approved = "0";
 
 
-   $layout =   $_POST['selectedFile'];
+        $layout =   $_POST['selectedFile'];
 
 
 
-  
+
         $stmt = $pdo->prepare('INSERT INTO land (
             land_id, owner_id, description,
              type, size, land_loard,
@@ -98,5 +98,3 @@ switch ($method) {
         echo json_encode(['error' => 'Method not allowed']);
         break;
 }
-
-?>

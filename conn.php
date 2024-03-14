@@ -1,6 +1,20 @@
 <?php
 
 
+
+header("Access-Control-Allow-Origin: *");
+
+header('Content-Type: *');
+
+header('Access-Control-Allow-Heagers: *');
+
+header("Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE");
+header("Access-Control-Allow-Headers: * ");
+
+
+
+
+
 $servername = "localhost";
 $username = "u953672825_user";
 $password = "1347Happy";
