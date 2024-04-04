@@ -11,31 +11,36 @@ $method = $_SERVER['REQUEST_METHOD'];
 
 switch ($method) {
     case 'GET':
-        // Read operation (fetch applications)
-        $stmt = $pdo->query('SELECT * FROM applications');
+        // Read operation (fetch applications with user details)
+        $stmt = $pdo->query("
+            SELECT land.*, users.*
+            FROM land
+            INNER JOIN users ON land.owner_id = users.id WHERE land.approved = 3
+        ");
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
         echo json_encode($result);
         break;
 
+
     case 'POST':
-    // Create operation (add a new application)
-    $data = json_decode(file_get_contents('php://input'), true);
+        // Create operation (add a new application)
+        $data = json_decode(file_get_contents('php://input'), true);
 
-    $user_id = $data['from'];
-    $land_id = $data['land_id'];
-    $to_id = $data['to_id'];
-    $nature = $data['nature'];
-    $description = $data['description'];
-    $national_id = $data['national_id'];
-    
-    $application_date = date("Y-m-d H:i:s");
-    $accepted = "0";
+        $user_id = $data['from'];
+        $land_id = $data['land_id'];
+        $to_id = $data['to_id'];
+        $nature = $data['nature'];
+        $description = $data['description'];
+        $national_id = $data['national_id'];
 
-    $stmt = $pdo->prepare("INSERT INTO applications (user_id, land_id, application_date, accepted, to_id, nature, description, national_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-    $stmt->execute([$user_id, $land_id, $application_date, $accepted, $to_id, $nature, $description, $national_id]);
+        $application_date = date("Y-m-d H:i:s");
+        $accepted = "0";
 
-    echo json_encode(['message' => 'Application added successfully']);
-    break;
+        $stmt = $pdo->prepare("INSERT INTO applications (user_id, land_id, application_date, accepted, to_id, nature, description, national_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmt->execute([$user_id, $land_id, $application_date, $accepted, $to_id, $nature, $description, $national_id]);
+
+        echo json_encode(['message' => 'Application added successfully']);
+        break;
 
 
 
@@ -72,5 +77,3 @@ switch ($method) {
         echo json_encode(['error' => 'Method not allowed']);
         break;
 }
-
-?>

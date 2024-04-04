@@ -11,7 +11,7 @@ $method = $_SERVER['REQUEST_METHOD'];
 
 switch ($method) {
     case 'GET':
-        $stmt = $pdo->query('SELECT * FROM title_deeds');
+        $stmt = $pdo->query('SELECT * FROM blockchain_transactions');
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
         echo json_encode($result);
         break;
@@ -19,18 +19,18 @@ switch ($method) {
     case 'POST':
         $data = json_decode(file_get_contents('php://input'), true);
 
-      
-       $title_deed = $data['title_deed'];
+
+        $title_deed = $data['title_deed'];
         $type = $data['type'];
-         $offer_number = $data['offer_number'];
+        $offer_number = $data['offer_number'];
         $deed_number = $data['deed_number'];
-       
-    
-        $approved = isset($data['gr_no']) ? "1":"0";
+
+
+        $approved = isset($data['gr_no']) ? "1" : "0";
         $expiry_date = date("Y-m-d H:i:s");
 
 
- $owner_phone_number = $data['gr_no'];
+        $owner_phone_number = $data['gr_no'];
 
 
 
@@ -41,15 +41,15 @@ switch ($method) {
         break;
 
     case 'PUT':
-    $data = json_decode(file_get_contents('php://input'), true);
+        $data = json_decode(file_get_contents('php://input'), true);
 
-    $deed_number = $data['deed_number'];
-    $approved = isset($data['gr_no']) ? 1 : 0;  // Use a boolean value for 'approved'
-    $title_deed = $data['title_deed'];
-   
+        $deed_number = $data['deed_number'];
+        $approved = isset($data['gr_no']) ? 1 : 0;  // Use a boolean value for 'approved'
+        $title_deed = $data['title_deed'];
 
-    $stmt = $pdo->prepare('UPDATE title_deeds SET approved = ?, title_deed = ? WHERE deed_number = ?'); 
-    $stmt->execute([$approved, $title_deed, $deed_number]);
+
+        $stmt = $pdo->prepare('UPDATE title_deeds SET approved = ?, title_deed = ? WHERE deed_number = ?');
+        $stmt->execute([$approved, $title_deed, $deed_number]);
 
         echo json_encode(['message' => 'Title deed updated successfully']);
         break;
@@ -68,5 +68,3 @@ switch ($method) {
         echo json_encode(['error' => 'Method not allowed']);
         break;
 }
-
-?>

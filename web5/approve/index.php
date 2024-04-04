@@ -65,7 +65,7 @@ switch ($method) {
     case 'PUT':
         $land_id = $_GET['land_code'];
         $price = $_GET['price'];
-        $approved = "2";
+        $approved = "1";
 
         $stmt = $pdo->prepare('UPDATE land SET approved=?, price=? WHERE land_id=?');
         $stmt->execute([$approved, $price, $land_id]);

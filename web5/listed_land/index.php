@@ -1,9 +1,8 @@
 <?php
 
-header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 header("Access-Control-Allow-Origin: *");
 header('Content-Type: application/json');
-header("Access-Control-Allow-Methods: *");
+header("Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE");
 header("Access-Control-Allow-Headers: *");
 
 require_once("../../conn.php");
@@ -14,8 +13,22 @@ $method = $_SERVER['REQUEST_METHOD'];
 
 switch ($method) {
     case 'GET':
-        // Read operation (fetch lands)
-        $stmt = $pdo->query('SELECT * FROM land');
+
+
+        // Read operation (fetch applications with user details)
+        $data = json_decode(file_get_contents('php://input'), true);
+        $listed_land_id = $_GET['listed_land_id'];
+
+
+
+        $stmt = $pdo->prepare('SELECT land.*,users.full_name, users.phone_number
+        FROM land
+        INNER JOIN users ON land.owner_id = users.id
+        WHERE land.id = :listed_land_id');
+        $stmt->bindParam(':listed_land_id', $listed_land_id);
+
+        $stmt->execute();
+
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
         echo json_encode($result);
         break;
@@ -29,12 +42,12 @@ switch ($method) {
         $description = $_POST['description'];
         $type = $_POST['type'];
         $size = $_POST['size'];
-        $land_loard = $_POST['land_loard'];
+        $land_loard =   isset($_POST['land_loard']) ? $_POST['land_loard'] : 'lands';
 
 
-        $owner_id = "3";
-        $price = "9500";
-        $duration = "90";
+        $owner_id = isset($_POST['owner_id']) ? $_POST['owner_id'] : '';
+        $price = isset($_POST['land_loard']) ? "60000" : "0";
+        $duration = "Not Registered";
         $approved = "0";
 
 
@@ -63,16 +76,25 @@ switch ($method) {
         break;
 
     case 'PUT':
-        $land_id = $_GET['land_code'];
-        $price = $_GET['price'];
-        $approved = "2";
+        // Update operation (edit a land)
+        parse_str(file_get_contents('php://input'), $data);
+        $id = $data['id'];
+        $land_id = $data['land_id'];
+        $owner_id = $data['owner_id'];
+        $description = $data['description'];
+        $type = $data['type'];
+        $size = $data['size'];
+        $land_loard = $data['land_loard'];
+        $layout = $data['layout'];
+        $price = $data['price'];
+        $duration = $data['duration'];
+        $approved = $data['approved'];
 
-        $stmt = $pdo->prepare('UPDATE land SET approved=?, price=? WHERE land_id=?');
-        $stmt->execute([$approved, $price, $land_id]);
+        $stmt = $pdo->prepare('UPDATE land SET land_id=?, owner_id=?, description=?, type=?, size=?, land_loard=?, layout=?, price=?, duration=?, approved=? WHERE id=?');
+        $stmt->execute([$land_id, $owner_id, $description, $type, $size, $land_loard, $layout, $price, $duration, $approved, $id]);
 
         echo json_encode(['message' => 'Land updated successfully']);
         break;
-
 
     case 'DELETE':
         // Delete operation (remove a land)

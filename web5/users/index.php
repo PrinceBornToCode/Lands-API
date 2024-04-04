@@ -28,7 +28,7 @@ switch ($method) {
         $land = $data['land'];
         $land_process = $data['land_process'];
 
-        $stmt = $pdo->prepare('INSERT INTO users (full_name, phone_number, password, address, private_key, public_key, wallet_address, land, landProcess) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)');
+        $stmt = $pdo->prepare('INSERT INTO users (full_name, phone_number, password, address, private_key, date_of_birth, email, nation_id, gender) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)');
         $stmt->execute([$full_name, $phone_number, $password, $address, $private_key, $public_key, $wallet_address, $land, $land_process]);
 
         echo json_encode(['message' => 'User added successfully']);
@@ -61,5 +61,3 @@ switch ($method) {
         echo json_encode(['error' => 'Method not allowed']);
         break;
 }
-
-?>

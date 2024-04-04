@@ -1,9 +1,8 @@
 <?php
 
-header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 header("Access-Control-Allow-Origin: *");
 header('Content-Type: application/json');
-header("Access-Control-Allow-Methods: *");
+header("Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE");
 header("Access-Control-Allow-Headers: *");
 
 require_once("../../conn.php");
@@ -14,8 +13,14 @@ $method = $_SERVER['REQUEST_METHOD'];
 
 switch ($method) {
     case 'GET':
-        // Read operation (fetch lands)
-        $stmt = $pdo->query('SELECT * FROM land');
+
+        $approved = "3";
+        $stmt = $pdo->prepare('SELECT land.*,users.full_name, users.phone_number
+        FROM land
+        INNER JOIN users ON land.owner_id = users.id
+        WHERE approved=:approved');
+        $stmt->execute([':approved' => $approved]);
+
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
         echo json_encode($result);
         break;
@@ -29,12 +34,12 @@ switch ($method) {
         $description = $_POST['description'];
         $type = $_POST['type'];
         $size = $_POST['size'];
-        $land_loard = $_POST['land_loard'];
+        $land_loard =   isset($_POST['land_loard']) ? $_POST['land_loard'] : 'lands';
 
 
-        $owner_id = "3";
-        $price = "9500";
-        $duration = "90";
+        $owner_id = isset($_POST['owner_id']) ? $_POST['owner_id'] : '';
+        $price = isset($_POST['land_loard']) ? "60000" : "0";
+        $duration = "Not Registered";
         $approved = "0";
 
 
@@ -61,16 +66,29 @@ switch ($method) {
 
         echo json_encode(['message' => 'Land added successfully']);
         break;
-
     case 'PUT':
         $land_id = $_GET['land_code'];
         $price = $_GET['price'];
-        $approved = "2";
+        $phone_number = $_GET['owner'];
 
-        $stmt = $pdo->prepare('UPDATE land SET approved=?, price=? WHERE land_id=?');
-        $stmt->execute([$approved, $price, $land_id]);
+        $approved = "3";
 
-        echo json_encode(['message' => 'Land updated successfully']);
+        // First, fetch the user_id based on the phone_number
+        $stmt = $pdo->prepare('SELECT id FROM users WHERE phone_number = ?');
+        $stmt->execute([$phone_number]);
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($user) {
+            $user_id = $user['id'];
+
+            // Now, update the land table with the new user_id
+            $stmt = $pdo->prepare('UPDATE land SET approved=?, price=?, owner_id=? WHERE id=?');
+            $stmt->execute([$approved, $price, $user_id, $land_id]);
+
+            echo json_encode(['message' => 'Land updated successfully']);
+        } else {
+            echo json_encode(['message' => 'User not found']);
+        }
         break;
 
 

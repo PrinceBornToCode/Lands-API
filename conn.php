@@ -3,16 +3,21 @@
 
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 header("Access-Control-Allow-Origin: *");
-header('Content-Type: application/json');
+header('Content-Type: *');
 header("Access-Control-Allow-Methods: *");
 header("Access-Control-Allow-Headers: *");
 
 
 
+// $servername = "localhost";
+// $username = "u953672825_user";
+// $password = "1347Happy";
+// $dbname = "u953672825_mzuniadmin";
+
 $servername = "localhost";
-$username = "u953672825_user";
-$password = "1347Happy";
-$dbname = "u953672825_mzuniadmin";
+$username = "root";
+$password = "";
+$dbname = "mzuniadmin";
 
 
 
