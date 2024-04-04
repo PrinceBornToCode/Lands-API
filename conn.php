@@ -1,17 +1,11 @@
 <?php
 
 
-
+header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 header("Access-Control-Allow-Origin: *");
-
-header('Content-Type: *');
-
-header('Access-Control-Allow-Heagers: *');
-
-header("Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE");
-header("Access-Control-Allow-Headers: * ");
-
-
+header('Content-Type: application/json');
+header("Access-Control-Allow-Methods: *");
+header("Access-Control-Allow-Headers: *");
 
 
 
