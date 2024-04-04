@@ -9,15 +9,15 @@ header("Access-Control-Allow-Headers: *");
 
 
 
-// $servername = "localhost";
-// $username = "u953672825_user";
-// $password = "1347Happy";
-// $dbname = "u953672825_mzuniadmin";
-
 $servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "mzuniadmin";
+$username = "u953672825_user";
+$password = "1347Happy";
+$dbname = "u953672825_mzuniadmin";
+
+// $servername = "localhost";
+// $username = "root";
+// $password = "";
+// $dbname = "mzuniadmin";
 
 
 
