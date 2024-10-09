@@ -12,12 +12,12 @@ header("Access-Control-Allow-Headers: *");
 $servername = "localhost";
 $username = "root";
 $password = "";
-$dbname = "chaintech_art";
+$dbname = "masslibrarysystem";
 
 // $servername = "localhost";
-// $username = "u897516670_chaintechhub";
-// $password = "P@55w0rD!G8&Zx7YtLq3#";
-// $dbname = "u897516670_chaintechhub";
+// $username = "root";
+// $password = "";
+// $dbname = "mzuniadmin";
 
 
 

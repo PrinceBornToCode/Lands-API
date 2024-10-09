@@ -56,6 +56,9 @@ switch ($method) {
             $land_layout_url
         ]);
 
+
+
+
         echo json_encode(['message' => 'Application added successfully']);
         break;
 
