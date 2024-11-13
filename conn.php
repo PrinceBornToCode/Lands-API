@@ -12,7 +12,7 @@ header("Access-Control-Allow-Headers: *");
 $servername = "localhost";
 $username = "root";
 $password = "";
-$dbname = "chaintech_art";
+$dbname = "mzuniadmin";
 
 // $servername = "localhost";
 // $username = "u897516670_chaintechhub";

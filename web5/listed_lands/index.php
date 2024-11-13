@@ -14,8 +14,8 @@ $method = $_SERVER['REQUEST_METHOD'];
 switch ($method) {
     case 'GET':
 
-        $approved = "2";
-        $stmt = $pdo->prepare('SELECT land.*,users.full_name, users.phone_number
+        $approved = 2;
+        $stmt = $pdo->prepare('SELECT land.*,users.*
         FROM land
         INNER JOIN users ON land.owner_id = users.id
         WHERE approved=:approved');
@@ -66,30 +66,41 @@ switch ($method) {
 
         echo json_encode(['message' => 'Land added successfully']);
         break;
-    case 'PUT':
-        $land_id = $_GET['land_code'];
-        $price = $_GET['price'];
-        $phone_number = $_GET['owner'];
 
-        $approved = "3";
 
-        // First, fetch the user_id based on the phone_number
-        $stmt = $pdo->prepare('SELECT id FROM users WHERE phone_number = ?');
-        $stmt->execute([$phone_number]);
-        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+// Assuming this is part of a larger switch-case block
 
-        if ($user) {
-            $user_id = $user['id'];
+case 'PUT':
+    // Fetch the JSON input data
+    $input = json_decode(file_get_contents('php://input'), true);
 
-            // Now, update the land table with the new user_id
-            $stmt = $pdo->prepare('UPDATE land SET approved=?, price=?, owner_id=? WHERE id=?');
-            $stmt->execute([$approved, $price, $user_id, $land_id]);
+    // Make sure all required fields are present in the input
+    if (!isset($input['land_code']) || !isset($input['price']) || !isset($input['owner'])) {
+        echo json_encode(['error' => 'Missing required fields']);
+        exit;
+    }
 
-            echo json_encode(['message' => 'Land updated successfully']);
+    // Assign variables from the input
+    $land_id = $input['land_code'];
+    $price = $input['price'];
+    $user_id = $input['owner'];
+    $approved = 1;
+
+    try {
+        // Prepare the SQL statement to update the land entry
+        $stmt = $pdo->prepare('UPDATE land SET price = ?, owner_id = ? , approved =? WHERE land_id = ?');
+        $result = $stmt->execute([$price, $user_id, $land_id , $approved]);
+
+        if ($result) {
+            echo json_encode(['message' => 'Land updated successfully', 'updated_land_id' => $land_id]);
         } else {
-            echo json_encode(['message' => 'User not found']);
+            echo json_encode(['message' => 'No changes made, or land not found']);
         }
-        break;
+    } catch (PDOException $e) {
+        echo json_encode(['error' => 'Database error: ' . $e->getMessage()]);
+    }
+    break;
+
 
 
     case 'DELETE':

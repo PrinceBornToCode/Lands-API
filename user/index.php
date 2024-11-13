@@ -11,20 +11,9 @@ header("Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE");
 header("Access-Control-Allow-Headers: * ");
 
 
-
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "mzuzuadmin";
+require('../config.php');
 
 
-
-try {
-  $pdo = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
-  $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch (PDOException $e) {
-  die("Database connection failed: " . $e->getMessage());
-}
 
 $method = $_SERVER['REQUEST_METHOD'];
 
@@ -34,18 +23,29 @@ switch ($method) {
   case 'GET':
 
 
-    // Read operation (fetch books)
-    $data = json_decode(file_get_contents('php://input'), true);
-    $address = (string) $_GET['address'];
+  $eth = $web3->eth;
 
-    $stmt = $pdo->prepare('SELECT * FROM users WHERE address = :address');
-    $stmt->bindParam(':address', $address);
+echo 'Eth Get Account and Balance' . PHP_EOL;
+$eth->accounts(function ($err, $accounts) use ($eth) {
+    if ($err !== null) {
+        echo 'Error: ' . $err->getMessage();
+        return;
+    }
+    foreach ($accounts as $account) {
+        echo 'Account: ' . $account . PHP_EOL;
 
-    $stmt->execute();
-    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $eth->getBalance($account, function ($err, $balance) {
+            if ($err !== null) {
+                echo 'Error: ' . $err->getMessage();
+                return;
+            }
+            echo 'Balance: ' . $balance . PHP_EOL;
+        });
+    }
+});
 
 
-    echo json_encode($result);
+    echo json_encode($eth);
 
     break;
   case 'POST':

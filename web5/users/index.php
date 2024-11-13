@@ -5,7 +5,7 @@ header('Content-Type: application/json');
 header("Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE");
 header("Access-Control-Allow-Headers: *");
 
-require '../../conn.php';
+require '../../config.php';
 
 $method = $_SERVER['REQUEST_METHOD'];
 

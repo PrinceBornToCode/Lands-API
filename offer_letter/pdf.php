@@ -21,6 +21,7 @@ $row_id = $_GET['row_id'];
 $deed_number = $_GET['deed_number'];
 $title_deed = $_GET['title_deed'];
 $date = $_GET['date'];
+$blockchainHash = $_GET['blockchainHash'];
 
 // TCPDF library initialization
 require_once('../TCPDF-main/tcpdf.php');
@@ -136,7 +137,7 @@ $txt4 = "\n Date :" . $today_date;
 $pdf->Write(0, $txt3, '', 0, 'C', true, 0, false, false, 0);
 $pdf->Write(0, $txt4, '', 0, 'C', true, 0, false, false, 0);
 $pdf->Write(0, 'Period : 99 years', '', 0, 'C', true, 0, false, false, 0);
-$txt = "Blockchain Security Hash:\n \n" . $date;
+$txt = "Blockchain Security Hash:\n \n" . $blockchainHash;
 
 $pdf->MultiCell(55, 5, $txt, 1, 'J', 1, 2, 125, 210, true);
 
